@@ -62,7 +62,7 @@ function ProductDetailPage() {
     return (
         <div className="max-w-[1200px] mx-auto px-[16px] py-[40px] flex flex-col md:flex-row gap-[40px]">
 
-            <div className="w-full md:w-1/2">
+            <div className="w-full md:w-1/4 md:max-w-[400px]">
                 <img
                     src={activeImage?.url}
                     alt={product.name}

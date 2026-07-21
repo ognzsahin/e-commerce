@@ -13,12 +13,17 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../redux/store";
 import md5 from "md5";
 
-export const navLinks = [       //export diğer bileşenlerin de kullanması için koyduk.
+
+export const navLinks = [
     { title: "Home", path: "/" },
     { title: "Shop", path: "/shop" },
-    { title: "About", path: "/about" },
     { title: "Contact", path: "/contact" },
 ];
+
+export const aboutDropdown = [
+    { title: "About Us", path: "/about" },
+    { title: "Team", path: "/team" },
+];          //diğer bileşenlerin de kullanması için export const..
 
 function getStoredAvatar(email: string): AvatarConfig | null {
     const stored = localStorage.getItem(`avatar_${email.trim().toLowerCase()}`);
@@ -89,6 +94,25 @@ function Header() {
         return () => document.removeEventListener("mousedown", handleClickOutsideCart);
     }, [isCartOpen]);
 
+    {/* ---- */}
+
+    const [isAboutDropdownOpen, setIsAboutDropdownOpen] = useState(false);
+    const aboutDropdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        function handleClickOutsideAbout(event: MouseEvent) {
+            if (aboutDropdownRef.current && !aboutDropdownRef.current.contains(event.target as Node)) {
+                setIsAboutDropdownOpen(false);
+            }
+        }
+
+        if (isAboutDropdownOpen) {
+            document.addEventListener("mousedown", handleClickOutsideAbout);
+        }
+
+        return () => document.removeEventListener("mousedown", handleClickOutsideAbout);
+    }, [isAboutDropdownOpen]);
+
     function handleAvatarChange(config: AvatarConfig) {
         setAvatarConfig(config);
         if (user) {
@@ -99,8 +123,8 @@ function Header() {
         }
     }
     return (
-        <div className="w-full relative flex flex-col">
-                <div className='hidden md:block bg-[#252B42] text-white px-6 py-8 text-lg font-bold'>
+        <div className="w-full relative flex flex-col z-40">
+                <div className='hidden md:block bg-[#252B42] text-white px-6 py-8 text-lg font-bold '>
                     <div className='flex items-center justify-between max-w-[1440px] mx-auto'>
 
                         {/* Sol Parça: İletişim */}
@@ -149,10 +173,35 @@ function Header() {
 
                 <nav className='hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-8 text-base text-slate-600 font-medium'>
                     {navLinks.map((link, index) => (
-                        <a key={index} href={link.path} className='hover:text-slate-900'>
+                        <Link key={index} to={link.path} className='hover:text-slate-900'>
                             {link.title}
-                        </a>
+                        </Link>
                     ))}
+
+                    <div className="relative" ref={aboutDropdownRef}>
+                        <button
+                            type="button"
+                            onClick={() => setIsAboutDropdownOpen(!isAboutDropdownOpen)}
+                            className="hover:text-slate-900"
+                        >
+                            About
+                        </button>
+
+                            {isAboutDropdownOpen && (
+                                <div className="absolute top-full mt-2 left-0 bg-white border border-gray-200 rounded-lg shadow-lg py-2 w-[160px] z-50">
+                                {aboutDropdown.map((item, index) => (
+                                    <Link
+                                        key={index}
+                                        to={item.path}
+                                        onClick={() => setIsAboutDropdownOpen(false)}
+                                        className="block px-4 py-2 text-sm text-[#252B42] hover:bg-gray-50"
+                                    >
+                                        {item.title}
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </nav>
 
                 <div className="flex items-center gap-6">

@@ -16,6 +16,10 @@ import CartPage from "../pages/CartPage"
 import ProtectedRoute from "../components/common/ProtectedRoute"
 import OrderPage from "../pages/OrderPage"
 import PreviousOrdersPage from "../pages/PreviousOrdersPage"
+import ContactPage from "../pages/ContactPage"
+import TeamPage from "../pages/TeamPage"
+import AboutPage from "../pages/AboutPage"
+
 
 
 function AppRouter() {
@@ -62,6 +66,9 @@ function AppRouter() {
                 }
             />
           </Route>
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/team" element={<TeamPage />} />
+          <Route path="/about" element={<AboutPage />} />
         </Routes>
         <Footer />
       </div>

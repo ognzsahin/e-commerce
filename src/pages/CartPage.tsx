@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "../redux/store";
-import { updateCartItemCount, removeFromCart } from "../redux/actions/cartActions";
+import { updateCartItemCount, removeFromCart, toggleCartItemChecked  } from "../redux/actions/cartActions";
 import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -8,10 +8,12 @@ function CartPage() {
     const dispatch = useDispatch<AppDispatch>();
     const cart = useSelector((state: RootState) => state.shoppingCart.cart);
 
-    const productsTotal = cart.reduce((sum, item) => {
-        const product = item.product as Record<string, unknown>;
-        return sum + (product.price as number) * (item.count as number);
-    }, 0);
+    const productsTotal = cart
+        .filter((item) => item.checked)
+        .reduce((sum, item) => {
+            const product = item.product as Record<string, unknown>;
+            return sum + (product.price as number) * (item.count as number);
+        }, 0);
 
     const shippingCost = productsTotal > 150 ? 0 : 29.99;
     const discount = productsTotal > 150 ? 29.99 : 0;
@@ -34,6 +36,14 @@ function CartPage() {
                         const images = product.images as { url: string }[];
                         return (
                             <div key={index} className="flex items-center gap-4 border border-gray-200 rounded p-4">
+
+                                <input
+                                    type="checkbox"
+                                    checked={item.checked as boolean}
+                                    onChange={() => dispatch(toggleCartItemChecked(product.id as number))}
+                                    className="w-5 h-5"
+                                />
+
                                 <img
                                     src={images?.[0]?.url}
                                     alt={product.name as string}

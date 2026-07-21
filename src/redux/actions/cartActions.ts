@@ -6,6 +6,8 @@ export const ADD_TO_CART = "ADD_TO_CART";
 export const UPDATE_CART_ITEM_COUNT = "UPDATE_CART_ITEM_COUNT";
 export const REMOVE_FROM_CART = "REMOVE_FROM_CART";
 
+export const TOGGLE_CART_ITEM_CHECKED = "TOGGLE_CART_ITEM_CHECKED";
+
 
 export function setCart(cart: Record<string, unknown>[]) {
     return { type: SET_CART, payload: cart };
@@ -36,6 +38,13 @@ export function updateCartItemCount(productId: number, count: number) {
 export function removeFromCart(productId: number) {
     return {
         type: REMOVE_FROM_CART,
+        payload: productId,
+    };
+}
+
+export function toggleCartItemChecked(productId: number) {
+    return {
+        type: TOGGLE_CART_ITEM_CHECKED,
         payload: productId,
     };
 }

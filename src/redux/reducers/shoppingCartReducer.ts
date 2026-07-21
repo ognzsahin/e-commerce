@@ -1,4 +1,4 @@
-import { SET_CART, SET_PAYMENT, SET_ADDRESS, ADD_TO_CART, UPDATE_CART_ITEM_COUNT, REMOVE_FROM_CART }
+import { SET_CART, SET_PAYMENT, SET_ADDRESS, ADD_TO_CART, UPDATE_CART_ITEM_COUNT, REMOVE_FROM_CART, TOGGLE_CART_ITEM_CHECKED}
     from "../actions/cartActions";
 
 
@@ -68,6 +68,16 @@ function shoppingCartReducer(state = initialState, action: ShoppingCartAction): 
                 );  //ID'si eşleşmeyen ürünler kalsın.
                 return { ...state, cart: filteredCart };
             };
+
+            case TOGGLE_CART_ITEM_CHECKED: {
+                const productId = action.payload as number;
+                const updatedCart = state.cart.map((item) =>
+                    (item.product as Record<string, unknown>).id === productId
+                        ? { ...item, checked: !item.checked }
+                        : item
+                );
+                return { ...state, cart: updatedCart };
+            }
 
 
         default:
